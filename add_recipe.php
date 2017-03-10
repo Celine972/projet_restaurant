@@ -174,7 +174,7 @@ include('header.php');
 	</form>
 	<?php endif; ?>
 
-<p>gsjfshfgsjgfsjfgjfsjg</p>
+
 </body>
 </html>
 
