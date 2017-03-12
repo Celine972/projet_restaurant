@@ -46,17 +46,19 @@ foreach($_POST as $key => $value){
 
     	if(count($errors) === 0){
 
-		$update = $bdd->prepare('UPDATE users SET lastname = :lastname, firstname = :firstname, password = :password, email = :email, nickname = :nickname, role = :role WHERE id = :iduser');
+		$update = $bdd->prepare('UPDATE users SET lastname = :lastname, firstname = :firstname, password = :password, email = :email, nickname = :nickname, role = :role WHERE id_user = :idUser');
 
-        $update->bindValue(':idUser', $user_id, PDO::PARAM_INT);
-		$update->bindValue(':lastname', $post['lastname']);
-		$update->bindValue(':firstname', $post['firstname']);
-		$update->bindValue(':password', password_hash($post['password'], PASSWORD_DEFAULT));
-		$update->bindValue(':email', $post['email']);
-		$update->bindValue(':nickname', $post['nickname']);
-		$update->bindValue(':role', $post['role']);
+			$update->bindValue(':idUser', $user_id, PDO::PARAM_INT);
+			$update->bindValue(':lastname', $post['lastname']);
+			$update->bindValue(':firstname', $post['firstname']);
+			$update->bindValue(':password', password_hash($post['password'], PASSWORD_DEFAULT));
+			$update->bindValue(':email', $post['email']);
+			$update->bindValue(':nickname', $post['nickname']);
+            $update->bindValue(':role', $post['role']);
 		
-		if($update->execute())
+		
+        
+        if($update->execute())
 		{
 			$success = 'Félicitations votre compte a été modifié';
             
@@ -73,7 +75,7 @@ foreach($_POST as $key => $value){
 }
 
     // On sélectionne l'utilisateur pour être sur qu'il existe et remplir le formulaire
-    $select = $bdd->prepare('SELECT * FROM users WHERE id = :idUser');
+    $select = $bdd->prepare('SELECT * FROM users WHERE id_user = :idUser');
     $select->bindValue(':idUser', $user_id, PDO::PARAM_INT);
 
     if($select->execute()){
@@ -154,7 +156,7 @@ foreach($_POST as $key => $value){
                         <label for="lastname">Nom</label>
                     </div>
                     <div class="col-md-8 form-group">
-                        <input id="lastname" type="text" name="lastname" placeholder="Nom" class="form-control">
+                        <input id="lastname" value ="<?php echo $my_user['lastname']; ?>" type="text" name="lastname" placeholder="Nom" class="form-control">
                     </div>
 
                     <!-- Prénom -->
@@ -162,7 +164,7 @@ foreach($_POST as $key => $value){
                         <label for="firstname">Prénom</label>
                     </div>
                     <div class="col-md-8 form-group">                      
-                        <input id="firstname" type="text" name="firstname" placeholder="Prénom" class="form-control">         
+                        <input id="firstname" value ="<?php echo $my_user['firstname']; ?>" type="text" name="firstname" placeholder="Prénom" class="form-control">         
                     </div>
 
                     <!-- Password -->
@@ -178,7 +180,7 @@ foreach($_POST as $key => $value){
                         <label for="text">pseudo</label>
                     </div>
                     <div class="col-md-8 form-group">         
-                        <input id="nickname" type="nickname" name="nickname" placeholder="Pseudo" class="form-control">                
+                        <input id="nickname" value ="<?php echo $my_user['nickname']; ?>" type="nickname" name="nickname" placeholder="Pseudo" class="form-control">                
                     </div>
 
                     <!-- Email -->
@@ -186,7 +188,7 @@ foreach($_POST as $key => $value){
                         <label for="text">Email</label>
                     </div>
                     <div class="col-md-8 form-group">                      
-                        <input id="email"type="email" name="email" placeholder="Email" class="form-control">                  
+                        <input id="email" value ="<?php echo $my_user['email']; ?>" type="email" name="email" placeholder="Email" class="form-control">                  
                     </div>
 
                     <!-- Role -->
@@ -196,7 +198,7 @@ foreach($_POST as $key => $value){
                     <div class="col-md-8 form-group">
                         
                         <select class="form-control" id="role" name="role">
-                                    <option>-- Sélectionnez --</option>
+                                    <option>--<?php echo $my_user['role']; ?> --</option>
                                     <option>Administrateur</option>
                                     <option>Auteur</option>
                         </select>
