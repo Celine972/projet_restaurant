@@ -75,13 +75,21 @@ else {
 		<tbody>
 			<!-- foreach permettant d'avoir une ligne <tr> par ligne SQL -->
 			<?php foreach($messages as $message): ?>
+				
 				<tr>
 					<td></td>
 					<!--<td><?=$message['id_message']; ?></td>-->
 					<td><?=$message['date']; ?></td>
+					
 					<td><?=$message['firstname'].' '.$message['lastname']; ?></td>
+					
 					<td><?=$message['object']; ?></td>
-					<td><?=substr($message['content'], 0, 39); ?></td><!-- renvoie les 40 premiers caractères du coprs du message-->
+					
+					<td><a href="display_message.php?id=<?=$message['id_message']?>&amp;source=message">
+					
+                        <?=substr($message['content'], 0, 39); ?></a>
+                    </td><!-- renvoie les 40 premiers caractères du coprs du message-->
+					</a>
 					<td>
 					<!-- view_menu.php?id=6 -->
 						<a href="contact_reply.php?id=<?=$message['id_message']; ?>" ><i class="fa fa-mail-reply"></i></a>
@@ -90,6 +98,7 @@ else {
 						<a href="delete_message.php?id=<?=$message['id_message']; ?>"><i class="fa fa-trash-o"></i></a>
 					</td>
 				</tr>
+				
 			<?php endforeach; ?>
 		</tbody>
 	</table>

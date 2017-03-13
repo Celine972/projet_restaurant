@@ -1,46 +1,70 @@
 <?php
+
+//ETAT : fonctionne
+
 require_once 'inc/connect.php';
 
 //$source = 'message';
+/*$_GET['id'] = 2;
+$_GET['source'] = 'sent';
+echo 'toto';*/
 
-$_GET['id'] = 10;
-$_GET['source'] = 'message';
-echo 'toto';
-var_dump($_GET);
 $mess_to_display =[];
 /************************* test get si envoie id et source message ************************/
 if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id']) && isset($_GET['source'])){
 	
     $id_mess_to_display = (int) $_GET['id'];
-    echo '<br>titi<br>';
+      
     $source = $_GET['source'];
-    var_dump($source);
-    echo '<br>titi<br>';
-/**************** TEST MESSAGE PROVENANT DE BOITE RECEPTION **********/    
-    if($source == 'message'){
-        //on affiche message de table message dont l'id est id_message
-        $select = $bdd->prepare('SELECT * FROM message WHERE id_message = :id_mess_to_display');
-        $select->bindValue(':id_mess_to_display', $id_mess_to_display, PDO::PARAM_INT);
+  
 
-        var_dump($id_mess_to_display);
-        echo '<br>coucou';
-        
-        if($select->execute()){
-           echo 'hello world';
-            $mess_to_display = $select->fetch(PDO::FETCH_ASSOC);
+
+
+
+/**************** TEST MESSAGE PROVENANT DE ELEMENTS ENVOYES **********/    
+    if($source == 'sent'){
+        //on affiche message de table message dont l'id est id_message
+        $selectOne = $bdd->prepare('SELECT * FROM sent WHERE id_message_sent = :id_mess_to_display');
+        $selectOne->bindValue(':id_mess_to_display', $id_mess_to_display, PDO::PARAM_INT);
+
+       
+        if($selectOne->execute()){
+            $mess_to_display = $selectOne->fetch(PDO::FETCH_ASSOC);
             
-            var_dump($mess_to_display);
         }
         else {
 		// Erreur de développement
 		var_dump($query->errorInfo());
 		die; // alias de exit(); => die('Hello world');
-    }} }
+        }
+    }
+}
+/**************************************************************************/
+
+/**************** TEST MESSAGE PROVENANT DE BOITE RECEPTION **********/    
+    if($source == 'message'){
+        //on affiche message de table message dont l'id est id_message
+        $selectOne = $bdd->prepare('SELECT * FROM message WHERE id_message = :id_mess_to_display');
+        $selectOne->bindValue(':id_mess_to_display', $id_mess_to_display, PDO::PARAM_INT);
+
+                
+        if($selectOne->execute()){
+          
+            $mess_to_display = $selectOne->fetch(PDO::FETCH_ASSOC);
+            
+        }
+        else {
+		// Erreur de dévelloppement
+		
+		die; // alias de exit(); => die('Hello world');
+        }
+    } 
+
 ?><!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
-	<title></title>
+	<title><?=$mess_to_display['object'];?> </title>
 	
 <!-- ################	Pour Internet Explorer : S'assurer qu'il utilise
 	la dernière version du moteur de rendu 	###################-->    
@@ -73,16 +97,17 @@ if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id']) && isset
 
 </head>
 <body>
-	<h1>provenance (reception/envoyé)</h1>
+	<h1> </h1>
 <div class="container">
 <div class = 'row'>
     <div class="col-xs-12">
-      <?php foreach($mess_to_display as $key): ?>
-       <p><?=$key['date'];?></p>
-       <?php var_dump($key); ?>
-        <p><?=$key['firstname'].' '.$key['lastname'];?></p>
-        <p><?=$key['content'];?></p>  
-       <?php endforeach; ?> 
+     
+     
+       <p>date : <?=$mess_to_display['date'];?></p>
+       
+        <p>De : <?=$mess_to_display['firstname'].' '.$mess_to_display['lastname'];?></p>
+        <p><?=$mess_to_display['content'];?></p>  
+        
     </div>
 </div>	 
             

@@ -4,7 +4,7 @@ require_once 'inc/connect.php';
 
 
 // On selectionne les toutes les colonnes de la table users
-$select = $bdd->prepare('SELECT * FROM sent ORDER BY id_message DESC');
+$select = $bdd->prepare('SELECT * FROM sent ORDER BY id_message_sent DESC');
 if($select->execute()){
 	$messages_sent = $select->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -76,19 +76,22 @@ else {
 			<?php foreach($messages_sent as $message_sent): ?>
 				<tr>
 					<td></td>
-					<!--<td><?=$message_sent['id_message']; ?></td>-->
+					<!--<td><?=$message_sent['id_message_sent']; ?></td>-->
 					<td><?=$message_sent['date']; ?></td>
-					<td><?=$message_sent['firstname'].' '.$message_sent['lastname']; ?></td>
-					<td><?=$message_sent['object']; ?></td>
+					
+                    <td><?=$message_sent['firstname'].' '.$message_sent['lastname']; ?></td>
+                    
+                    <td><a href="display_message.php?id=<?=$message_sent['id_message_sent']?>&amp;source=sent"><?=$message_sent['object']; ?></a></td>
 					
 <!--string substr ( string $string , int $start [, int $length ] )-->					
-					<td><?=substr($message_sent['content'], 0, 39); ?></td><!-- renvoie les 40 premiers caractères du coprs du message-->
+                    <td><a href="display_message.php?id=<?=$message_sent['id_message_sent']?>&amp;source=sent"><?=substr($message_sent['content'], 0, 39); ?></a></td><!-- renvoie les 40 premiers caractères du coprs du message-->
+					
 					<td>
 						<!-- view_menu.php?id=6 -->
-						<a href="#?id=<?=$message['id_message']; ?>"><i class="fa fa-mail-forward"></i></a>
+						<a href="#?id=<?=$message['id_message_sent']; ?>"><i class="fa fa-mail-forward"></i></a>
                     </td>
 					<td>
-						<a href="delete_message.php?id=<?=$message_sent['id_message']; ?>"><i class="fa fa-trash-o"></i></a>
+						<a href="delete_message.php?id=<?=$message_sent['id_message_sent']; ?>"><i class="fa fa-trash-o"></i></a>
 					</td>
 				</tr>
 			<?php endforeach; ?>
