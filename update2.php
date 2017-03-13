@@ -6,6 +6,9 @@ $errors = [];
 $post = []; // Contiendra les données épurées <3 <3
 
 
+if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id'])){
+    $user_id = (int) $_GET['id'];
+
 if(!empty($_POST)){
 
 foreach($_POST as $key => $value){
@@ -22,10 +25,7 @@ foreach($_POST as $key => $value){
     }
 
     //Vérification du password
-
-    
-    
-    if(preg_match($post['password'], "/{6,24}/")) {
+    if(strlen($post['password']) < 8 || strlen($post['password']) > 20) {
 		$errors[] = "Le champ Password doit avoir au minimum 8 caractères";
 	}
 
@@ -35,7 +35,7 @@ foreach($_POST as $key => $value){
     }
     
     //Vérification que l'email soit bien rempli
-    if (!preg_match('#^[\w.-]+@[\w.-]+\.[a-z]{2,6}$#i', $post['email'])) {
+    if (!filter_var($post['email'], FILTER_VALIDATE_EMAIL)) {
      $errors[] = "Cette adresse email est considérée comme invalide.";
     } 
     
@@ -46,22 +46,24 @@ foreach($_POST as $key => $value){
 
     	if(count($errors) === 0){
 
-		$insert = $bdd->prepare('INSERT INTO users (lastname, firstname, password, email, nickname, role) VALUES (:lastname, :firstname, :password, :email, :nickname, :role)');
-		$insert->bindValue(':lastname', $post['lastname']);
-		$insert->bindValue(':firstname', $post['firstname']);
-		$insert->bindValue(':password', password_hash($post['password'], PASSWORD_DEFAULT));
-		$insert->bindValue(':email', $post['email']);
-		$insert->bindValue(':nickname', $post['nickname']);
-		$insert->bindValue(':role', $post['role']);
+		$update = $bdd->prepare('UPDATE users SET lastname = :lastname, firstname = :firstname, password = :password, email = :email, nickname = :nickname, role = :role WHERE id = :iduser');
+
+        $update->bindValue(':idUser', $user_id, PDO::PARAM_INT);
+		$update->bindValue(':lastname', $post['lastname']);
+		$update->bindValue(':firstname', $post['firstname']);
+		$update->bindValue(':password', password_hash($post['password'], PASSWORD_DEFAULT));
+		$update->bindValue(':email', $post['email']);
+		$update->bindValue(':nickname', $post['nickname']);
+		$update->bindValue(':role', $post['role']);
 		
-		if($insert->execute())
+		if($update->execute())
 		{
-			$success = 'Félicitations vous êtes inscrit';
+			$success = 'Félicitations votre compte a été modifié';
             
 		}
 		else
 		{
-			var_dump($insert->errorInfo());
+			var_dump($update->errorInfo());
 		}
 	}
 	else
@@ -70,6 +72,14 @@ foreach($_POST as $key => $value){
 	}
 }
 
+    // On sélectionne l'utilisateur pour être sur qu'il existe et remplir le formulaire
+    $select = $bdd->prepare('SELECT * FROM users WHERE id = :idUser');
+    $select->bindValue(':idUser', $user_id, PDO::PARAM_INT);
+
+    if($select->execute()){
+        $my_user = $select->fetch(PDO::FETCH_ASSOC);
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -79,7 +89,7 @@ foreach($_POST as $key => $value){
     <meta charset="UTF-8">
 
     <!-- Titre de la Page -->
-    <title>Ajout utilisateur</title>
+    <title>Mise à jour</title>
 
     <!-- Pour Internet Explorer : S'assurer qu'il utilise la dernière version du moteur de rendu -->
     <meta http-equiv="X-UA-Compatible" content="IE-edge">
@@ -108,6 +118,7 @@ foreach($_POST as $key => $value){
 
     <main class="container">
 
+
     <?php
         // Affichage du message d'erreur
         if(isset($textErrors)){
@@ -121,7 +132,7 @@ foreach($_POST as $key => $value){
 
         <header class="row">
             <div class="contact col-xs-12">
-                <h1>Ajout contact</h1>
+                <h1>Modifier contact</h1>
             </div>
         </header>
 
@@ -134,9 +145,8 @@ foreach($_POST as $key => $value){
                     <fieldset>
 
                         <!-- Nom du formulaire-->
-                        <legend>Ajouter un Contact</legend>
-
-                        
+                        <legend>Mise à jour</legend>
+                       
                     </fieldset>
 
                     <!-- Nom -->
@@ -203,8 +213,8 @@ foreach($_POST as $key => $value){
 
             </div>
 
-
         </section>
+
     </main>
 
 </body>

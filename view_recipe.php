@@ -10,11 +10,11 @@ if(isset($_GET['id']) && !empty($_GET['id'])){
 	$idRecette = (int) $_GET['id'];
 
 
-$selectOne = $bdd->prepare('SELECT *, firstname, lastname FROM recipe INNER JOIN users AS u ON id_user = id_recipe WHERE id_recipe = :idRecette');
+$selectOne = $bdd->prepare('SELECT *, firstname, lastname FROM recipe INNER JOIN users ON id_user = id_recipe WHERE id_recipe = :idRecette');
 	$selectOne->bindValue(':idRecette', $idRecette, PDO::PARAM_INT);
 
 	if($selectOne->execute()){
-		$recette = $selectOne->fetch(PDO::FETCH_ASSOC);
+		$recette = $selectOne->fetch(PDO::FETCH_ASSOC);                                                                                                                                    
 	}
 	else {
 		// Erreur de développement

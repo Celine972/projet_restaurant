@@ -1,28 +1,24 @@
-<?php session_start();
-
+<?php
+// ETAT: Fonctionne
+session_start();
 require_once 'inc/connect.php';
 
-$errors = []; // tableau des erreurs
-$post = []; // tableau input apres _POST
-$displayForm = true; // affichage formulaire
+$errors = []; 
+$post = []; 
+$displayForm = true; 
 
-
-
-
-if(!empty($_POST)){  // si la super globale $_POST n'est pas vide 
+if(!empty($_POST)){  
 	
-    foreach($_POST as $key => $value){ // pour chaque valeur liée à une clé
-		$post[$key] = trim(strip_tags($value));// on nettoie les variables de tout html ou php "insécurisés
-	}
+    foreach($_POST as $key => $value){ 
 
+		$post[$key] = trim(strip_tags($value));
+	}
 	if(strlen($post['firstname']) < 2  || strlen($post['firstname']) > 20){
 		$errors[] = 'Votre prénom doit comporter entre 2 et 20 caractères';
 	}
-
     if(strlen($post['lastname']) < 2  || strlen($post['lastname']) > 20){
 		$errors[] = 'Votre nom doit comporter entre 2 et 20 caractères';
 	}
-
     if(!filter_var($post['mail'], FILTER_VALIDATE_EMAIL)) {
 		$errors[] = "Votre email n'est pas conforme";
 	}
@@ -34,42 +30,32 @@ if(!empty($_POST)){  // si la super globale $_POST n'est pas vide
 	if(strlen($post['content']) < 20 || strlen($post['content']) > 100){
 		$errors[] = 'La description doit comporter au moins 20 au plus 100 caractères';
 	}
-
 	
 	
 	if(count($errors) === 0){
-
-		//$date = date("Y-m-d H:i:s");
         
-        //echo $date;
-        
-		$query = $bdd->prepare('INSERT INTO message (date, firstname ,lastname, mail, object, content) VALUES (now(), :firstname, :lastname, :mail, :object, :content)');
 
-		//$query->bindValue(':date', $date); // PDO::PARAM_STR est le paramètre par défaut et donc non obligatoire si on traite un string
+		$query = $bdd->prepare('INSERT INTO message (firstname ,lastname, mail, object, content) VALUES (:firstname, :lastname, :mail, :object, :content)');
 		$query->bindValue(':firstname', $post['firstname']);
 		$query->bindValue(':lastname', $post['lastname']);
 		$query->bindValue(':mail', $post['mail']);
 		$query->bindValue(':object', $post['object']);
 		$query->bindValue(':content', $post['content']);
-
-		if($query->execute()){
+		
+        if($query->execute()){
 			$success = 'Votre message a été envoyée !<br>A très bientôt dans notre établissement !';
 			$displayForm = false;
 		}
 		else {
-			// Erreur de développement
+			
 			var_dump($query->errorInfo());
-			die; // alias de exit(); => die('Hello world');
+			die; 
 		}
-
 	}
 	else {
 		$errorsText = implode('<br>', $errors); 
 	}
 }
-
-
-
 ?>
 
 
@@ -103,13 +89,12 @@ if(!empty($_POST)){  // si la super globale $_POST n'est pas vide
 	<link rel="stylesheet" href="assets/css/normalize.css">-->
 	
 	<!-- ################	Styles CSS 	###################-->
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <!--<link rel="stylesheet" href="assets/css/styles.css">-->
     
     <!-- ################	HTML5 Shiv -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js" integrity="sha256-sqQlcOZwgKkBRRn5WvShSsuopOdq9c3U+StqgPiFhHQ=" crossorigin="anonymous"></script>
     
     <style>
-
         
     </style>
     
@@ -129,10 +114,12 @@ if(!empty($_POST)){  // si la super globale $_POST n'est pas vide
                 <div class="row">
                     
                     <?php 
+                    if($displayForm == false){
+                        echo '<p style="color : green; text-align : center;">' .$success.'</p>';
+                    }
                     
                     
-                    
-                    if($displayForm = true){?>
+                    elseif($displayForm = true){?>
                         
                                         
                     
@@ -143,7 +130,7 @@ if(!empty($_POST)){  // si la super globale $_POST n'est pas vide
                         <form id="contact-form" class="form-horizontal" 
                              method="post">
                             
-            <!----------------- Nom et Prénom -------------------------->
+            <!----------------- Nom et Prénom ------------------------ -->
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-5 col-lg-6">
                                     <input name="firstname" required class="form-control" type="text" placeholder="Saisissez votre Prénom">
@@ -155,7 +142,7 @@ if(!empty($_POST)){  // si la super globale $_POST n'est pas vide
                             </div>
                             
                             
-            <!--------------------- mail & tel -------------------------->
+            <!--------------------- mail & tel ------------------------ -->
                             <div class="form-group">
                                 
                                 <div class="col-sm-5">
@@ -167,8 +154,7 @@ if(!empty($_POST)){  // si la super globale $_POST n'est pas vide
                                 </div>-->
                                 
                             </div> 
-                            
-            <!--------------------- /mail & tel -------------------------->                
+                        
             <!------------------------ sujet -------------------------->                
                             <div class="form-group">
                                 <div class="col-xs-12">
@@ -176,30 +162,28 @@ if(!empty($_POST)){  // si la super globale $_POST n'est pas vide
                                 </div>
                             </div>
                             
-            <!----------------------- Message ----------->
+            <!----------------------- Message --------- -->
                             <div class="form-group">
                               <div class="col-xs-12">
                                   <textarea id="content" name="content" rows="8" placeholder="Message" class="form-control"></textarea>           
                               </div>
                             </div>
-            <!----------------------- /Message ---------------------->                
-            <!-------------------- Bouton d'Envoi ------------------->
+                           
+            <!-------------------- Bouton d'Envoi ---------------- -->
                             <div class="form-group">
                                 <div class="col-xs-12">
                                     <button type="submit" class="btn btn-primary" name="contact" value="Envoyer ma Demande">Envoyer ma Demande</button>
                                 </div>
                             </div>
-            <!-------------------- /Bouton d'Envoi ------------------->                
+                           
                         </form>    
                     </div>
                 </div>
             </div>
 </main>
-
 <?php }
     
     else echo $errorsText; ?>
-
 <footer>
         <div class="row">
                 <div class="col-xs-12">
@@ -207,11 +191,4 @@ if(!empty($_POST)){  // si la super globale $_POST n'est pas vide
                 </div>
         </div>
 </footer>
-
 </body>
-
-
-
-
-
-

@@ -38,8 +38,8 @@ if(!empty($_POST)){
 						'nickname'  => $user['nickname'],
 					];
 
-					/*header('Location: add_menu.php'); // Redirection vers 
-					die;*/
+					header('Location: index.php');
+					die;
 				}
 				else { // password_verify
 					$errors[] = 'Le couple identifiant/mot de passe est invalide';
