@@ -1,31 +1,41 @@
 <?php
 require_once 'inc/connect.php';
 
-$source = 'message';
+//$source = 'message';
 
-$_GET['id'] = 14;
+$_GET['id'] = 10;
 $_GET['source'] = 'message';
-
+echo 'toto';
 var_dump($_GET);
-
+$mess_to_display =[];
 /************************* test get si envoie id et source message ************************/
 if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id']) && isset($_GET['source'])){
 	
     $id_mess_to_display = (int) $_GET['id'];
-    echo '<br';
+    echo '<br>titi<br>';
     $source = $_GET['source'];
-    
+    var_dump($source);
+    echo '<br>titi<br>';
 /**************** TEST MESSAGE PROVENANT DE BOITE RECEPTION **********/    
     if($source == 'message'){
         //on affiche message de table message dont l'id est id_message
         $select = $bdd->prepare('SELECT * FROM message WHERE id_message = :id_mess_to_display');
         $select->bindValue(':id_mess_to_display', $id_mess_to_display, PDO::PARAM_INT);
 
+        var_dump($id_mess_to_display);
+        echo '<br>coucou';
+        
         if($select->execute()){
+           echo 'hello world';
             $mess_to_display = $select->fetch(PDO::FETCH_ASSOC);
             
             var_dump($mess_to_display);
-    
+        }
+        else {
+		// Erreur de développement
+		var_dump($query->errorInfo());
+		die; // alias de exit(); => die('Hello world');
+    }} }
 ?><!DOCTYPE html>
 <html>
 <head>
@@ -69,6 +79,7 @@ if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id']) && isset
     <div class="col-xs-12">
       <?php foreach($mess_to_display as $key): ?>
        <p><?=$key['date'];?></p>
+       <?php var_dump($key); ?>
         <p><?=$key['firstname'].' '.$key['lastname'];?></p>
         <p><?=$key['content'];?></p>  
        <?php endforeach; ?> 
@@ -77,11 +88,6 @@ if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id']) && isset
             
 </div>
 </body>       
-    <?php}
-    
-    }
-}
-    
- ?>   
+
 	
    

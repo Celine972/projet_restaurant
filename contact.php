@@ -1,4 +1,8 @@
-<?php session_start();
+
+<?php
+// ETAT: Fonctionne
+
+session_start();
 
 require_once 'inc/connect.php';
 
