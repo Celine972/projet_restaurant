@@ -18,7 +18,7 @@ else {
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>BOITE DE RECEPTION</title>
+	<title>Boite de réception</title>
 	
 <!-- ################	Pour Internet Explorer : S'assurer qu'il utilise
 	la dernière version du moteur de rendu 	###################-->    
@@ -29,9 +29,9 @@ else {
     
 	<!-- ################	Font awesome	###################-->
     
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <!--<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">-->
     
-    <!--<link href="assets/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">-->
+    <link href="assets/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     
     <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed" rel="stylesheet">
 	
@@ -51,9 +51,14 @@ else {
 
 </head>
 <body>
-	<h1>Messages reçus</h1>
-<div class="container">
+	<h1>BOITE DE RECEPTION</h1>
 	
+<div class="container">
+<div class = 'row'>
+    <div class="col-xs-12">
+        <a href="message_sent.php">Elements envoyés</a>
+    </div>
+</div>	
 	<table class= "table table-striped">
 		<thead>
 			<tr>
@@ -76,10 +81,10 @@ else {
 					<td><?=$message['date']; ?></td>
 					<td><?=$message['firstname'].' '.$message['lastname']; ?></td>
 					<td><?=$message['object']; ?></td>
-					<td><?=$message['object']; ?></td>
+					<td><?=substr($message['content'], 0, 39); ?></td><!-- renvoie les 40 premiers caractères du coprs du message-->
 					<td>
-						<!-- view_menu.php?id=6 -->
-						<a href="reply.php?id=<?=$message['id_message']; ?>"><i class="fa fa-mail-reply"></i></a>
+					<!-- view_menu.php?id=6 -->
+						<a href="contact_reply.php?id=<?=$message['id_message']; ?>" ><i class="fa fa-mail-reply"></i></a>
                     </td>
 					<td>
 						<a href="delete_message.php?id=<?=$message['id_message']; ?>"><i class="fa fa-trash-o"></i></a>
