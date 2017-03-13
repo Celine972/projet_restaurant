@@ -22,7 +22,7 @@ if(!empty($_POST)){
 		$post[$key] = trim(strip_tags($value));
 	}
 
-	 		if(empty($post['title'])){
+	 		if(!preg_match("/^.{5,140}$/u", $post['title'])){
             $errors[]='Ce titre n\'est pas valide';
             } 
 
@@ -34,17 +34,15 @@ if(!empty($_POST)){
             $errors[]='La liste d\'ingredients n\'est pas remplie';
             } 
     
-            if(empty($post['preparation'])){
-            $errors[]='La preparattion est manquante';
+            if(!preg_match("/^.{20,255}$/u", $post['preparation'])){
+            $errors[]='La preparation est manquante';
             }
 
 	if(strlen($post['ingredients']) < 20){
 		$errors[] = 'La liste d\'ingredients doit comporter au moins 20 caractères';
 	}
     
-    if(strlen($post['preparation']) < 20){
-		$errors[] = 'La preparation doit comporter au moins 20 caractères';
-	}
+   
 
 
 	if(isset($_FILES['picture']) && $_FILES['picture']['error'] === 0){

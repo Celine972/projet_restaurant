@@ -25,8 +25,8 @@ foreach($_POST as $key => $value){
 
     
     
-    if(preg_match($post['password'], "/{6,24}/")) {
-		$errors[] = "Le champ Password doit avoir au minimum 8 caractères";
+    if(!preg_match("/^.{8,20}$/u", $post['password'])) {
+		$errors[] = "Le champ Password doit avoir au minimum 8 caractères et 20 maximum";
 	}
 
     //Vérification sur le pseudo
