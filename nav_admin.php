@@ -49,7 +49,7 @@
               <a class="navbar-brand" href="#">Nom restaurant</a>
             </div>
             <ul class="nav navbar-nav">
-              <li class="active"><a href="list_user.php">Utilisateur</a></li>
+              <li class="active"><a href="list_users.php">Utilisateur</a></li>
               <li><a href="message.php">Message</a></li>
               <li><a href="list_recipe.php">Recettes</a></li>
             </ul>

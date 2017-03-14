@@ -27,6 +27,24 @@ if(!empty($_POST)){
 <head>
 	<meta charset="utf-8">
 	<title>Déconnexion</title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+
+    <!-- Affichage sans zoom pour les mobiles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+     <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <!-- HTML5 Shiv -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js" integrity="sha256-sqQlcOZwgKkBRRn5WvShSsuopOdq9c3U+StqgPiFhHQ=" crossorigin="anonymous"></script>
+
 </head>
 <body>
 
@@ -34,8 +52,10 @@ if(!empty($_POST)){
 		<input type="hidden" name="action" value="disconnect">
 
 		<!-- history.back() permet de revenir à la page précédente -->
-		<button type="button" onclick="javascript:history.back();">Annuler</button>
-		<input type="submit" value="Se déconnecter">
+       <?php echo ($_SESSION['me']['firstname']).' '.($_SESSION['me']['lastname']).' êtes vous sûr de vouloir vous déconnectez? <br>' ;?>
+	<br>
+    	<button type="button" class="btn btn-primary" onclick="javascript:history.back();">Annuler</button>
+		<input type="submit" class="btn btn-primary" value="Se déconnecter">
 	</form>
 
 </body>

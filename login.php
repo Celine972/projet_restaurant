@@ -30,7 +30,7 @@ if(!empty($_POST)){
 					// Ici le mot de passe saisi correspond à celui en base de données
 					$_SESSION['is_logged'] = true;
 					$_SESSION['me'] = [
-						'id' 		=> $user['id'],
+						'id' 		=> $user['id_user'],
 						'firstname'	=> $user['firstname'],
 						'lastname'	=> $user['lastname'],
 						'email'		=> $user['email'],
@@ -38,8 +38,8 @@ if(!empty($_POST)){
 						'nickname'  => $user['nickname'],
 					];
 
-					/*header('Location: add_menu.php'); // Redirection vers 
-					die;*/
+					header('Location: index.php');
+					die;
 				}
 				else { // password_verify
 					$errors[] = 'Le couple identifiant/mot de passe est invalide';
@@ -114,11 +114,14 @@ if(!empty($_POST)){
                     <div class="col-md-8 form-group">
                         <input id="password" type="password" name="password" placeholder="password" class="form-control">      
                     </div>
-
+					
 					<!-- Submit -->
                     <div class="col-lg-12 form-group">
                         <button type="submit" class="btn btn-primary" name="contact" value="Ajouter Contact">Connexion</button>
                     </div>
+					<div class="col-lg-12 form-group">
+					<a href="forget_password.php">Mot de passe oublié</a>
+					</div>
 				</form>
 		</section>
 

@@ -1,9 +1,9 @@
 <?php session_start();
 require_once 'inc/connect.php';
 // On selectionne les toutes les colonnes de la table users
-$select = $bdd->prepare('SELECT * FROM message ORDER BY id_message DESC');
+$select = $bdd->prepare('SELECT * FROM sent ORDER BY id_message_sent DESC');
 if($select->execute()){
-	$messages = $select->fetchAll(PDO::FETCH_ASSOC);
+	$messages_sent = $select->fetchAll(PDO::FETCH_ASSOC);
 }
 else {
 	// Erreur de développement
@@ -14,7 +14,7 @@ else {
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>Boite de réception</title>
+	<title>BOITE DE RECEPTION</title>
 	
 <!-- ################	Pour Internet Explorer : S'assurer qu'il utilise
 	la dernière version du moteur de rendu 	###################-->    
@@ -25,7 +25,7 @@ else {
     
 	<!-- ################	Font awesome	###################-->
     
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <!--<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">-->
     
     <link href="assets/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     
@@ -47,12 +47,11 @@ else {
 
 </head>
 <body>
-	<h1>BOITE DE RECEPTION</h1>
-	
+	<h1>Messages envoyés</h1>
 <div class="container">
 <div class = 'row'>
     <div class="col-xs-12">
-        <a href="message_sent.php">Elements envoyés</a>
+        <a href="message.php">Boite de réception</a>
     </div>
 </div>	
 	<table class= "table table-striped">
@@ -60,30 +59,35 @@ else {
 			<tr>
 				<th></th>
 				<th>Date</th>
-				<th>De</th>
+				<th>A</th>
 				<th>Objet</th>
 				<th>Aperçu</th>
-				<th>Répondre</th>
+				<th>Transférer</th>
 				<th>Supprimer</th>
 			</tr>
 		</thead>
 
 		<tbody>
 			<!-- foreach permettant d'avoir une ligne <tr> par ligne SQL -->
-			<?php foreach($messages as $message): ?>
+			<?php foreach($messages_sent as $message_sent): ?>
 				<tr>
 					<td></td>
-					<!--<td><?=$message['id_message']; ?></td>-->
-					<td><?=$message['date']; ?></td>
-					<td><?=$message['firstname'].' '.$message['lastname']; ?></td>
-					<td><?=$message['object']; ?></td>
-					<td><?=substr($message['content'], 0, 39); ?></td><!-- renvoie les 40 premiers caractères du coprs du message-->
+					<!--<td><?=$message_sent['id_message_sent']; ?></td>-->
+					<td><?=$message_sent['date']; ?></td>
+					
+                    <td><?=$message_sent['firstname'].' '.$message_sent['lastname']; ?></td>
+                    
+                    <td><a href="display_message.php?id=<?=$message_sent['id_message_sent']?>&amp;source=sent"><?=$message_sent['object']; ?></a></td>
+					
+<!--string substr ( string $string , int $start [, int $length ] )-->					
+                    <td><a href="display_message.php?id=<?=$message_sent['id_message_sent']?>&amp;source=sent"><?=substr($message_sent['content'], 0, 39); ?></a></td><!-- renvoie les 40 premiers caractères du coprs du message-->
+					
 					<td>
-					<!-- view_menu.php?id=6 -->
-						<a href="contact_reply.php?id=<?=$message['id_message']; ?>" ><i class="fa fa-mail-reply"></i></a>
+						<!-- view_menu.php?id=6 -->
+						<a href="#?id=<?=$message['id_message_sent']; ?>"><i class="fa fa-mail-forward"></i></a>
                     </td>
 					<td>
-						<a href="delete_message.php?id=<?=$message['id_message']; ?>"><i class="fa fa-trash-o"></i></a>
+						<a href="delete_message.php?id=<?=$message_sent['id_message_sent']; ?>"><i class="fa fa-trash-o"></i></a>
 					</td>
 				</tr>
 			<?php endforeach; ?>

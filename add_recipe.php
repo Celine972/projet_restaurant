@@ -14,37 +14,36 @@ $mimeTypeAvailable = ['image/jpg', 'image/jpeg', 'image/pjpeg', 'image/png', 'im
 $errors = [];
 $post = [];
 $displayForm = true;
+var_dump($_SESSION['me']['id']);
+
 
 if(!empty($_POST)){
 	foreach($_POST as $key => $value){
 		$post[$key] = trim(strip_tags($value));
 	}
 
-	 		if(empty($post['title'])){
-            $errors[]='Ce nom n\'est pas valide';
+	 		if(!preg_match("/^.{5,140}$/u", $post['title'])){
+            $errors[]='Ce titre n\'est pas valide';
             } 
 
             if(!empty($post['title'])){
             $post['title'] = strtoupper($post['title']) ;  
             }
 
-            if(empty($post['id_recipe'])){
-            $errors[]='Ce prénom n\'est pas valide';
+            if(empty($post['ingredients'])){
+            $errors[]='La liste d\'ingredients n\'est pas remplie';
             } 
-
-            if(!empty($post['id_recipe'])){
-            $post['id_recipe'] = ucfirst($post['id_recipe']) ;  
+    
+            if(!preg_match("/^.{20,255}$/u", $post['preparation'])){
+            $errors[]='La preparation est manquante';
             }
 
-	if(strlen($post['content']) < 20){
-		$errors[] = 'La description doit comporter au moins 20 caractères';
+	if(strlen($post['ingredients']) < 20){
+		$errors[] = 'La liste d\'ingredients doit comporter au moins 20 caractères';
 	}
+    
+   
 
-	if(strlen($post['id_recipe'])!==10)
-        {   
-        // Séléction du maximum de caractères
-            $errors[]='Le numéro de reference doit faire 10 chiffres. ';
-        }
 
 	if(isset($_FILES['picture']) && $_FILES['picture']['error'] === 0){
 
@@ -92,18 +91,19 @@ if(!empty($_POST)){
 		}
 
 
-		$query = $bdd->prepare('INSERT INTO recipe (title, id_recipe, content, id_user, selected, picture) VALUES(:title, :id_recipe, :content, :id_user, :selected, :picture)');
 
-		$query->bindValue(':title', $post['title']); // PDO::PARAM_STR est le paramètre par défaut et donc non obligatoire si on traite un string
-		$query->bindValue(':id_recipe', $post['id_recipe']);
-		$query->bindValue(':content', $post['content']);
-        $query->bindValue(':id_user', $post['id_user'], PDO::PARAM_INT);
-		$query->bindValue(':selected', $isSelected, PDO::PARAM_INT);
+		$query = $bdd->prepare('INSERT INTO recipe (title, ingredients, preparation, selected, picture, id_author) VALUES (:title, :ingredients, :preparation, :selected, :picture, :id_author)');
+		$query->bindValue(':title', $post['title']);
+		$query->bindValue(':ingredients', $post['ingredients']);
+		$query->bindValue(':preparation', $post['preparation']);
+		$query->bindValue(':selected',  $isSelected);
 		$query->bindValue(':picture', $uploadDir.$newPictureName);
-		
+		$query->bindValue(':id_author', $_SESSION['me']['id'], PDO::PARAM_INT);
+
+       	
 
 		if($query->execute()){
-			$success = 'Youpi, l\'utilisateur a été ajouté avec succès';
+			$success = 'Youpi, la recette a été ajoutée avec succès';
 			$displayForm = false;
 		}
 		else {
@@ -125,16 +125,46 @@ if(!empty($_POST)){
 <head>
 <meta charset="utf-8">
 <title>Ajout Recette</title>
-<link rel="stylesheet" href="..assets/css/style.css">
+
+    <!-- Pour Internet Explorer : S'assurer qu'il utilise la dernière version du moteur de rendu -->
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+
+    <!-- Affichage sans zoom pour les mobiles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Styles CSS -->
+    <link rel="stylesheet" href="#">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <!-- HTML5 Shiv -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js" integrity="sha256-sqQlcOZwgKkBRRn5WvShSsuopOdq9c3U+StqgPiFhHQ=" crossorigin="anonymous"></script>
 </head>
 <body>
-<?php 
-include('header.php'); 
+<main class="container">
+ <?php 
+	include('nav_user.php');
+    
     if(isset($_SESSION['is_logged']) && $_SESSION['is_logged']){
     echo 'Bonjour '.$_SESSION['me']['firstname'].' '.$_SESSION['me']['lastname'].'.';   
     }
 ?>
-	<h1>Enregistrer une recette</h1>
+    <header class="row">
+            <div class="recette col-xs-12">
+                <h1>Ajouter recette</h1>
+            </div>
+        </header>
+	<section class="row">
+            <!-- Début du Formulaire -->
+            <div class="col-xs-12">
+                <!-- fin du Formulaire -->
 
 	<?php if(isset($errorsText)): ?>
 		<p style="color:red;"><?php echo $errorsText; ?></p>
@@ -146,35 +176,78 @@ include('header.php');
 
 
 	<?php if($displayForm === true): ?>
+		<form method="post" id="recette" class="form-horizontal" role="form" data-toggle="validator" enctype="multipart/form-data">
+                    <fieldset>
 
-	<form method="post" enctype="multipart/form-data">
+                        <!-- Nom du formulaire-->
+                        <!--<legend>Ajouter une recette</legend>-->
 
+                        
+                    </fieldset>
+
+
+        <div class="col-md-4 form-group">
 		<label for="title">Titre</label>
-		<input type="text" name="title" id="title">
+        </div>
+        <div class="col-md-8 form-group">
+		<input type="text" name="title" id="title" class="form-control">
+        </div>
 
 		<br>
+		
+		<div class="col-md-4 form-group">
+		<label for="ingredients">Ingredients</label>
+        </div>
+        <div class="col-md-8 form-group">
+		<textarea name="ingredients" id="ingredients" cols="30" rows="10" class="form-control"></textarea>
+        </div>
 
-		<label for="comment">Description</label>
-		<textarea name="comment" id="comment" cols="30" rows="10"></textarea>
+        <br>
+        
+        <div class="col-md-4 form-group">
+		<label for="preparation">Preparation</label>
+        </div>
+        <div class="col-md-8 form-group">
+		<textarea name="preparation" id="preparation" cols="30" rows="10" class="form-control"></textarea>
+        </div>
 
 		<br>
-
+        
+        <div class="col-md-4 form-group">
 		<label for="picture">Photo</label>
-		<input type="file" name="picture" id="picture" accept="image/*">
+        </div>
+        <div class="col-md-8 form-group">
+		<input type="file" name="picture" class="form-control" id="picture" accept="image/*">
+        </div>
 
 		<br><br>
 
 		<br><br>
+		<div class="col-md-8 form-group">
 		<label for="selected">Recette enregistrée</label>
-		<input type="checkbox" name="selected" id="selected"> Oui
+        </div>
+        <div class="col-md-8 form-group">
+		<input type="checkbox" name="selected" id="selected" class="form-control">
+        </div>
 
 
 		<br><br>
-		<input type="submit" value="Enregistrer la recette'">
+		<div class="col-lg-12 form-group">
+		<input type="submit" class="btn btn-primary" value="Enregistrer la recette">
+        </div>
 	</form>
-	<?php endif; ?>
+	 <?php endif; ?>
+	</div>
 
 
-</body>
+        </section>
+    </main>
+    </body>
 </html>
+   
 
+
+
+ 
+ 
+ 

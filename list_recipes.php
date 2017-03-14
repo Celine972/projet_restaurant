@@ -1,22 +1,28 @@
 <?php
 session_start();
+
+if(!isset($_SESSION['is_logged']) || !$_SESSION['is_logged']) {
+    header('Location: login.php');
+    die;
+}
+var_dump($_SESSION['me']['role']);
 require_once 'inc/connect.php';
 
-//if(!isset($_SESSION['is_logged']) || !$_SESSION['is_logged']) {
-//    header('Location: login.php');
-//    die;
-//}
+// view_menu.php?id=6
 
-// On selectionne les colonnes id & title de la table products
-$select = $bdd->prepare('SELECT id_recipe,title, id_user, content FROM recipe ORDER BY title DESC');
-if($select->execute()){
-	$productss = $select->fetchAll(PDO::FETCH_ASSOC);
-}
-else {
-	// Erreur de développement
-	var_dump($query->errorInfo());
-	die; // alias de exit(); => die('Hello world');
-}
+	// Jointure SQL permettant de récupérer la recette & le prénom & nom de l'utilisateur l'ayant publié
+	$selectOne = $bdd->prepare('SELECT * FROM users INNER JOIN recipe ON users.id_user = recipe.id_author WHERE users.id_user = recipe.id_author');
+
+	if($selectOne->execute()){
+		$products = $selectOne->fetchAll(PDO::FETCH_ASSOC);
+       
+	}
+	else {
+		// Erreur de développement
+		var_dump($selectOne->errorInfo());
+		die; // alias de exit(); => die('Hello world');
+	}
+
 
 ?>
     <!DOCTYPE html>
@@ -42,38 +48,44 @@ else {
 
     <body>
         <?php 
-	include('header.php');
+	include('nav_user.php');
 	?>
 
             <br>
 
             <div class="container">
-                <h2>Les Produits existants</h2>
+                <h2>Les Recettes existantes</h2>
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Titre</th>
-                            <th>Détails</th>
+                            <th>ID_AUTHOR</th>
+                            <th>NOM</th>
+                            <th>PRENOM</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <!-- foreach permettant d'avoir une ligne <tr> par ligne SQL -->
-                        <?php foreach($productss as $products): ?>
+                        <?php foreach($products as $product): ?>
                             <tr>
                                 <td>
-                                    <?=$products['id_recipe']; ?>
+                                    <?=$product['id_recipe']; ?>
                                 </td>
                                 <td>
-                                    <?=$products['title']; ?>
+                                    <?=$product['title']; ?>
+                                </td>
+                            
+                                <td>
+                                    <?=$product['firstname']; ?>
                                 </td>
                                 <td>
-                                    <?=$products['content']; ?>
+                                    <?=$product['lastname']; ?>
                                 </td>
                                 <td>
                                     <!-- view_products.php?id=6 -->
-                                    <a href="view_recipe.php?id=<?=$products['id_recipe']; ?>">
+                                    <a href="view_recipe.php?id=<?=$product['id_recipe']; ?>">
 							Visualiser
 						</a>
                                 </td>
