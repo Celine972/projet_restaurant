@@ -4,7 +4,7 @@ require 'inc/connect.php';
 
 $errors = [];
 $post = []; // Contiendra les données épurées <3 <3
-
+$displayForm = true; // Cette variables permet d'afficher mon Formulaire
 
 if(!empty($_POST)){
 
@@ -22,11 +22,8 @@ foreach($_POST as $key => $value){
     }
 
     //Vérification du password
-
-    
-    
-    if(!preg_match("/^.{8,20}$/u", $post['password'])) {
-		$errors[] = "Le champ Password doit avoir au minimum 8 caractères et 20 maximum";
+    if(strlen($post['password']) < 8 || strlen($post['password']) > 20) {
+		$errors[] = "Le champ Password doit avoir au minimum 8 caractères";
 	}
 
     //Vérification sur le pseudo
@@ -35,7 +32,7 @@ foreach($_POST as $key => $value){
     }
     
     //Vérification que l'email soit bien rempli
-    if (!preg_match('#^[\w.-]+@[\w.-]+\.[a-z]{2,6}$#i', $post['email'])) {
+    if (!filter_var($post['email'], FILTER_VALIDATE_EMAIL)) {
      $errors[] = "Cette adresse email est considérée comme invalide.";
     } 
     
@@ -45,13 +42,9 @@ foreach($_POST as $key => $value){
      }   
 
     	if(count($errors) === 0){
-require 'function_token.php';
-
-        
 
 		$insert = $bdd->prepare('INSERT INTO users (lastname, firstname, password, email, nickname, role) VALUES (:lastname, :firstname, :password, :email, :nickname, :role)');
-		
-        $insert->bindValue(':lastname', $post['lastname']);
+		$insert->bindValue(':lastname', $post['lastname']);
 		$insert->bindValue(':firstname', $post['firstname']);
 		$insert->bindValue(':password', password_hash($post['password'], PASSWORD_DEFAULT));
 		$insert->bindValue(':email', $post['email']);
@@ -73,8 +66,10 @@ require 'function_token.php';
 		$textErrors = implode('<br>', $errors);
 	}
 }
-?><!DOCTYPE html>
 
+?>
+
+<!DOCTYPE html>
 <html lang="fr">
 
 <head>
@@ -110,6 +105,7 @@ require 'function_token.php';
 
     <main class="container">
 
+     <div class="col-xs-12">
     <?php
         // Affichage du message d'erreur
         if(isset($textErrors)){
@@ -120,72 +116,56 @@ require 'function_token.php';
             echo '<p style="color:green">'.$success.'</p>';
         }
     ?>
-
+    </div>
         <header class="row">
-            <div class="contact col-xs-12">
+            <?php include('nav_admin.php'); ?>
+
+            <div class="contact col-xs-12 text-center">
                 <h1>Ajout contact</h1>
             </div>
         </header>
 
         <section class="row">
             <!-- Début du Formulaire -->
-            <div class="col-xs-12">
+            <div class="col-md-6 col-md-offset-3">
                 <!-- fin du Formulaire -->
 
+                <?php if($displayForm === true): ?>
                 <form method="post" id="contact" class="form-horizontal" role="form" data-toggle="validator">
-                    <fieldset>
 
-                        <!-- Nom du formulaire-->
-                        <legend>Ajouter un Contact</legend>
-
-                        
-                    </fieldset>
 
                     <!-- Nom -->
-                    <div class="col-md-4 form-group">
-                        <label for="lastname">Nom</label>
-                    </div>
-                    <div class="col-md-8 form-group">
+                    
+                    <div class="col-md-12 form-group">
                         <input id="lastname" type="text" name="lastname" placeholder="Nom" class="form-control">
                     </div>
 
                     <!-- Prénom -->
-                    <div class="col-md-4 form-group">
-                        <label for="firstname">Prénom</label>
-                    </div>
-                    <div class="col-md-8 form-group">                      
+                    <div class="col-md-12 form-group">                      
                         <input id="firstname" type="text" name="firstname" placeholder="Prénom" class="form-control">         
                     </div>
 
                     <!-- Password -->
-                    <div class="col-md-4 form-group">
-                        <label for="text">Password</label>
-                    </div>
-                    <div class="col-md-8 form-group">
+                    
+                    <div class="col-md-12 form-group">
                         <input id="password" type="password" name="password" placeholder="password" class="form-control">      
                     </div>
 
                     <!-- Pseudo -->
-                    <div class="col-md-4 form-group">
-                        <label for="text">pseudo</label>
-                    </div>
-                    <div class="col-md-8 form-group">         
+                    
+                    <div class="col-md-12 form-group">         
                         <input id="nickname" type="nickname" name="nickname" placeholder="Pseudo" class="form-control">                
                     </div>
 
                     <!-- Email -->
-                    <div class="col-md-4 form-group">
-                        <label for="text">Email</label>
-                    </div>
-                    <div class="col-md-8 form-group">                      
+                    
+                    <div class="col-md-12 form-group">                      
                         <input id="email"type="email" name="email" placeholder="Email" class="form-control">                  
                     </div>
 
                     <!-- Role -->
-                    <div class="col-md-4 form-group">
-                        <label for="text">role</label>
-                    </div>
-                    <div class="col-md-8 form-group">
+    
+                    <div class="col-md-12 form-group">
                         
                         <select class="form-control" id="role" name="role">
                                     <option>-- Sélectionnez --</option>
@@ -202,12 +182,24 @@ require 'function_token.php';
 
                 </form>
                 <!-- Fin de mon formulaire -->
-
+                <?php endif; ?>
             </div>
 
 
         </section>
+
     </main>
+
+    <section_2>
+    
+    </section_2>    
+        <footer>
+                <div class="row">
+                        <div class="col-xs-12">
+                        <p style="text-align:center">Une Réalisation CJCC - Martinique</p>
+                        </div>
+                </div>
+        </footer>
 
 </body>
 
