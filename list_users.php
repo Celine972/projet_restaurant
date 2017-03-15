@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 require_once 'inc/connect.php';
 
 // On selectionne les toutes les colonnes de la table users avec un affichage par nom croissant
@@ -29,9 +29,17 @@ else {
  
 </head>
 <body class="view_user">
+
 <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
 <hr>
-<div class="container bootstrap snippet">
+<div class="container">
+<?php
+if($_SESSION['me']['role']=='Administrateur'){
+    include 'nav_admin.php';
+}else {
+    include 'nav_chef.php';
+}
+?>
     <div class="row">
         <div class="col-lg-12">
             <div class="main-box no-header clearfix">

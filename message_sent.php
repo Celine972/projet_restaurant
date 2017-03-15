@@ -34,11 +34,7 @@ else {
     <!-- ################	Bootstrap CSS 	###################-->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     
-    <!-- ################	Normalize CSS 	Inutile si bootstrp CSS ###################
-	<link rel="stylesheet" href="assets/css/normalize.css">-->
-	
-	<!-- ################	Styles CSS 	###################-->
-    <link rel="stylesheet" href="assets/css/styles.css">
+  
     
     <!-- ################	HTML5 Shiv -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js" integrity="sha256-sqQlcOZwgKkBRRn5WvShSsuopOdq9c3U+StqgPiFhHQ=" crossorigin="anonymous"></script>
@@ -47,8 +43,17 @@ else {
 
 </head>
 <body>
+<?php
+if($_SESSION['me']['role']=='Administrateur'){
+    include 'nav_admin.php';
+}else {
+    include 'nav_chef.php';
+}
+?>
+
 	<h1>Messages envoyés</h1>
 <div class="container">
+
 <div class = 'row'>
     <div class="col-xs-12">
         <a href="message.php">Boite de réception</a>
@@ -94,5 +99,12 @@ else {
 		</tbody>
 	</table>
 </div>
+<footer>
+        <div class="row">
+                <div class="col-xs-12">
+                <p style="text-align:center">Une Réalisation CJCC - Martinique</p>
+                </div>
+        </div>
+    </footer>
 </body>
 </html>

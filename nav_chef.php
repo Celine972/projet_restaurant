@@ -50,9 +50,7 @@
             </div>
             <ul class="nav navbar-nav">
               <li class="active"><a href="message.php">Nous contacter</a></li>
-            </ul>
-             <ul class="nav navbar-nav">
-              <li class="active"><a href="list_recipe.php">Nos recettes</a></li>
+              <li class="active"><a href="add_recipe.php">Recettes</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
 

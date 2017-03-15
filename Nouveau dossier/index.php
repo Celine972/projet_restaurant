@@ -30,14 +30,8 @@ session_start();
 	
     
     if(isset($_SESSION['is_logged']) && $_SESSION['is_logged']){
-    echo 'Bonjour '.$_SESSION['me']['firstname'].' '.$_SESSION['me']['lastname'].'.';
-               
+    echo 'Bonjour '.$_SESSION['me']['firstname'].' '.$_SESSION['me']['lastname'].'.';   
     }
-     if($_SESSION['me']['role']=='Administrateur'){
-        include 'nav_admin.php';
-}else {
-    include 'nav_chef.php';
-}  
 
                 
 
@@ -50,14 +44,16 @@ session_start();
             <!-- TOPHEADER -->
         <div class="topheader">
                 <p><i class="fa fa-user-circle-o" aria-hidden="true"></i> Espace Clients : <a href="login.php">Connexion</a> | <a href="add_user.php">Inscription</a></p>
-            
-
-          </div>        
+        </div>        
             <!-- HEADER -->
             <header>
 
-
-
+<?php if($_SESSION['me']['role']=='Administrateur'){
+    include 'nav_admin.php';
+}else {
+    include 'nav_chef.php';
+}
+?>
 
 <!--
             <div class="logo">

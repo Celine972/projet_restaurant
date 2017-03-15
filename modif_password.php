@@ -15,11 +15,11 @@ if(!empty($_POST)){
 
         $errors='Les mots de passe ne corrrespondent pas';
     }
-    else {
-        $success = 'Félicitations mot de passe modifié';
-
+   else{     
+ $success = 'Félicitations mot de passe modifié';
     }
  }
+
  if(!count($errors) === 0){
 
 $textErrors = implode('<br>', $errors);
@@ -28,8 +28,8 @@ $textErrors = implode('<br>', $errors);
 
 $up = $bdd ->prepare('UPDATE users SET password = :password  WHERE id_user = :idUser');
 
-$update->bindValue(':idUser', $_SESSION['me']['id'], PDO::PARAM_INT);
-$update->bindValue(':password', password_hash($post['password'], PASSWORD_DEFAULT));
+$up->bindValue(':idUser', $_SESSION['me']['id'], PDO::PARAM_INT);
+$up->bindValue(':password', password_hash($_POST['password'], PASSWORD_DEFAULT));
  }
 
 
@@ -80,6 +80,8 @@ $update->bindValue(':password', password_hash($post['password'], PASSWORD_DEFAUL
         if(isset($success)){
             echo '<p style="color:green">'.$success.'</p>';
         }
+
+        include 'nav_admin.php';
     ?>
 
         <header class="row">
@@ -115,7 +117,7 @@ $update->bindValue(':password', password_hash($post['password'], PASSWORD_DEFAUL
 
                     <!-- Submit -->
                     <div class="col-lg-12 form-group">
-                        <button type="submit" class="btn btn-primary" name="contact" value="Ajouter Contact">Ajouter contact</button>
+                        <button type="submit" class="btn btn-primary" name="contact" value="Ajouter Contact">Modifier le mot de passe</button>
                     </div>
 
                 </form>

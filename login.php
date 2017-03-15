@@ -48,6 +48,11 @@ if(!empty($_POST)){
 			else { // utilisateur inexistant, donc email inexistant en bdd
 				$errors[] = 'Le couple identifiant/mot de passe est invalide';
 			}
+			if($_SESSION['me']['role'] == 'Administrateur' ){
+				include 'nav_admin.php';
+			}else {
+				include 'nav_chef.php';
+			}
 		}
 	}
 }

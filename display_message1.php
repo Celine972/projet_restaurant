@@ -1,70 +1,39 @@
 <?php
-
-//ETAT : fonctionne
-
+session_start();
 require_once 'inc/connect.php';
-
 //$source = 'message';
-/*$_GET['id'] = 2;
-$_GET['source'] = 'sent';
-echo 'toto';*/
 
 $mess_to_display =[];
 /************************* test get si envoie id et source message ************************/
 if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id']) && isset($_GET['source'])){
 	
     $id_mess_to_display = (int) $_GET['id'];
-      
+   
     $source = $_GET['source'];
   
-
-
-
-
-/**************** TEST MESSAGE PROVENANT DE ELEMENTS ENVOYES **********/    
-    if($source == 'sent'){
-        //on affiche message de table message dont l'id est id_message
-        $selectOne = $bdd->prepare('SELECT * FROM sent WHERE id_message_sent = :id_mess_to_display');
-        $selectOne->bindValue(':id_mess_to_display', $id_mess_to_display, PDO::PARAM_INT);
-
-       
-        if($selectOne->execute()){
-            $mess_to_display = $selectOne->fetch(PDO::FETCH_ASSOC);
-            
-        }
-        else {
-		// Erreur de développement
-		var_dump($query->errorInfo());
-		die; // alias de exit(); => die('Hello world');
-        }
-    }
-}
-/**************************************************************************/
-
 /**************** TEST MESSAGE PROVENANT DE BOITE RECEPTION **********/    
     if($source == 'message'){
         //on affiche message de table message dont l'id est id_message
-        $selectOne = $bdd->prepare('SELECT * FROM message WHERE id_message = :id_mess_to_display');
-        $selectOne->bindValue(':id_mess_to_display', $id_mess_to_display, PDO::PARAM_INT);
-
-                
-        if($selectOne->execute()){
-          
-            $mess_to_display = $selectOne->fetch(PDO::FETCH_ASSOC);
+        $select = $bdd->prepare('SELECT * FROM message WHERE id_message = :id_mess_to_display');
+        $select->bindValue(':id_mess_to_display', $id_mess_to_display, PDO::PARAM_INT);
+       
+        
+        if($select->execute()){
+         
+            $mess_to_display = $select->fetch(PDO::FETCH_ASSOC);
             
+         
         }
         else {
-		// Erreur de dévelloppement
+		// Erreur de développement
 		
 		die; // alias de exit(); => die('Hello world');
-        }
-    } 
-
+    }} }
 ?><!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
-	<title><?=$mess_to_display['object'];?> </title>
+	<title></title>
 	
 <!-- ################	Pour Internet Explorer : S'assurer qu'il utilise
 	la dernière version du moteur de rendu 	###################-->    
@@ -87,7 +56,8 @@ if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id']) && isset
     <!-- ################	Normalize CSS 	Inutile si bootstrp CSS ###################
 	<link rel="stylesheet" href="assets/css/normalize.css">-->
 	
-	
+	<!-- ################	Styles CSS 	###################-->
+    <link rel="stylesheet" href="assets/css/styles.css">
     
     <!-- ################	HTML5 Shiv -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js" integrity="sha256-sqQlcOZwgKkBRRn5WvShSsuopOdq9c3U+StqgPiFhHQ=" crossorigin="anonymous"></script>
@@ -96,8 +66,10 @@ if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id']) && isset
 
 </head>
 <body>
-	<h1> </h1>
+	
 <div class="container">
+
+<div class = 'row'>
 <?php
 if($_SESSION['me']['role']=='Administrateur'){
     include 'nav_admin.php';
@@ -105,35 +77,15 @@ if($_SESSION['me']['role']=='Administrateur'){
     include 'nav_chef.php';
 }
 ?>
-<section_1>
-<div class = 'row'>
+<h1>Provenance (reception/envoyé)</h1>
     <div class="col-xs-12">
-     
-        
-        <p><span>Date :</span> <?=$mess_to_display['date'];?></p>
-        <hr>
-        <p><span>De :</span> <?=$mess_to_display['firstname'].' '.$mess_to_display['lastname'];?></p>
-        <hr>
-        <p><span>Message : </span><?=$mess_to_display['content'];?></p>
-        <hr> 
-        
+      <?php foreach($mess_to_display as $key): ?>
+        <p><?php echo $key['date'];?></p>
+        <p><?php echo $key['firstname'].' '.$key['lastname'];?></p>
+        <p><?php echo $key['content'];?></p>  
+       <?php endforeach; ?> 
     </div>
 </div>	 
-</section_1>
-
-<section_2>
-    
-</section_2>                       
-
-<footer>
-        <div class="row">
-                <div class="col-xs-12">
-                <p style="text-align:center">Une Réalisation CJCC - Martinique</p>
-                </div>
-        </div>
-    </footer>                     
+            
 </div>
 </body>       
-
-	
-   

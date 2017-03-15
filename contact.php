@@ -88,9 +88,7 @@ if(!empty($_POST)){
     <!-- ################	Normalize CSS 	Inutile si bootstrp CSS ###################
 	<link rel="stylesheet" href="assets/css/normalize.css">-->
 	
-	<!-- ################	Styles CSS 	###################-->
-    <!--<link rel="stylesheet" href="assets/css/styles.css">-->
-    
+	    
     <!-- ################	HTML5 Shiv -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js" integrity="sha256-sqQlcOZwgKkBRRn5WvShSsuopOdq9c3U+StqgPiFhHQ=" crossorigin="anonymous"></script>
     
@@ -111,6 +109,14 @@ if(!empty($_POST)){
 
 <main id="contact">
             <div class="container">
+
+            <?php
+if($_SESSION['me']['role']=='Administrateur'){
+    include 'nav_admin.php';
+}else {
+    include 'nav_chef.php';
+}
+?>
                 <div class="row">
                     
                     <?php 
@@ -187,8 +193,8 @@ if(!empty($_POST)){
 <footer>
         <div class="row">
                 <div class="col-xs-12">
-                <p>Une Réalisation CJCC - Martinique</p>
+                <p style="text-align:center">Une Réalisation CJCC - Martinique</p>
                 </div>
         </div>
-</footer>
+    </footer>
 </body>

@@ -17,7 +17,7 @@ if(!empty($_POST)){
 		$_SESSION = []; // équivalent à session_unset() (obsolète) 
 		session_destroy(); // détruit le cookie
 
-	 	header('Location: login.php');
+	 	header('Location: index.php');
  		die; 
 	}
 }
